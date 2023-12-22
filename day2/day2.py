@@ -47,3 +47,31 @@ for line in data:
         sum += int(id)
 
 print(sum)
+
+
+### part 2
+
+sum = 0
+for line in data:
+    line = line.strip()
+    id, stuff = line.split(":")
+    base_game = create_map()
+
+    for item in stuff.split(";"):
+        item = item.strip()
+        game = create_map()
+        for part in item.split(','):
+            part = part.strip()
+            count, color = part.split(" ")
+            count = int(count)
+            game[color] += count
+        for color in ['red', 'blue', 'green']:
+            if game[color] > base_game[color]:
+                base_game[color] = game[color]
+    power = base_game['red'] * base_game['blue'] * base_game['green']
+    sum += power
+
+print(sum)
+
+    
+
