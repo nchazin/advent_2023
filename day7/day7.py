@@ -1,8 +1,6 @@
 import sys
-
 from lib.tools import read_input
 
-rows = read_input(sys.argv[1])
 
 strength_1 = {
     "2": 1,
@@ -33,7 +31,7 @@ strength_2 = {
     "T": 9,
     "Q": 10,
     "K": 11,
-    "A": 122,
+    "A": 12,
 }
 
 
@@ -130,6 +128,7 @@ class Hand:
             else:
                 self._score = 5
         elif joker_count == 2:
+            #J,J,K,K,K
             if len(self.uniq)== 2:
                 self._score = 6
             # J, J, K, K, Q
@@ -138,55 +137,63 @@ class Hand:
             # J, J, 2, 3, A
             elif len(self.uniq) == 4:
                 self._score = 3
+            else:
+                print("Else")
         elif joker_count == 1:
             # J, 2,2,2,2
             if len(self.uniq)== 2:
                 self._score = 6
             # J, K,K, A, A
             elif len(self.uniq) == 3:
-                self._score = 4 
+                # J, K,K, K, A
+                if self.tok is not None:
+                    self._score = 5 
+                # J, K,K, A, A
+                else:
+                    self._score = 4
             # J, K, K,2  , A
             elif len(self.uniq) == 4:
                 self._score = 3
             # J, K, Q, A, 2
-            if len(self.uniq) == 5:
-                self._score = 2
-            # default, do nothing
+            elif len(self.uniq) == 5:
+                self._score = 1
+        # default, do nothing
 
 
     def __repr__(self):
         return f"{self.cards} - {self.bid} / {self.score}"
 
 
-hands = []
+if __name__ == '__main__':
+    rows = read_input(sys.argv[1])
 
-for row in rows:
-    row = row.strip()
-    cards, bid = row.split(" ")
-    hands.append(Hand(cards, int(bid)))
+    hands = []
 
-strength = strength_1
-#property being weird  in __lt__
-for h in hands:
-    score = h.score
-shands = sorted(hands)
+    for row in rows:
+        row = row.strip()
+        cards, bid = row.split(" ")
+        hands.append(Hand(cards, int(bid)))
 
-sum = 0
-for rank, hand in enumerate(shands):
-    sum += hand.bid * (rank + 1)
+    strength = strength_1
+    #property being weird  in __lt__
+    for h in hands:
+        score = h.score
+    shands = sorted(hands)
+
+    sum = 0
+    for rank, hand in enumerate(shands):
+        sum += hand.bid * (rank + 1)
 
 
-print(sum)
+    print(sum)
 
-for h in hands:
-    h.set_joker_score()
+    for h in hands:
+        h.set_joker_score()
 
-strength = strength_2
-shands = sorted(hands)
+    strength = strength_2
+    shands = sorted(hands)
 
-shands = sorted(hands)
-
-sum = 0
-for rank, hand in enumerate(shands):
-    sum += hand.bid * (rank + 1)
-print(sum)
+    sum = 0
+    for rank, hand in enumerate(shands):
+        sum += hand.bid * (rank + 1)
+    print(sum)
